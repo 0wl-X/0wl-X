@@ -57,3 +57,11 @@
 </div>
 
 ###
+
+<h3 align="left">💬 Live Discord Status</h3>
+
+###
+
+<div align="center">
+  <img src="https://lanyard.cnrad.dev/api/1216485958715834440" alt="Live Discord Status" />
+</div>
