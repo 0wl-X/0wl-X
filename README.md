@@ -49,13 +49,12 @@
 </div>
 
 ###
-
 <h3 align="left">🔥   My Stats</h3>
 
 ###
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=0wl-X&theme=radical&hide_border=true&bg_color=0D1117&color=6366F1&line=6366F1&point=FFFFFF" height="220" alt="activity graph" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=0wl-X&theme=radical&hide_border=true&bg_color=0D1117&color=6366F1&line=6366F1&point=FFFFFF" width="100%" height="400" alt="activity graph" />
 </div>
 
 ###
