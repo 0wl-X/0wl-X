@@ -12,7 +12,7 @@
 
 ## 🦉 about me
 
-I'm **Mussa**, a backend developer. I build websites and the backend systems behind them for paying clients.
+I'm **Mussa**, a backend developer. I build websites and the backend systems behind them.
 
 - 💼 **Work:** freelance websites and backend development
 - ⚙️ **Languages:** C, C# and C++ (strongest), plus JavaScript and Python
