@@ -38,23 +38,46 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Pull latest changes
+      - name: Sync with main
         run: |
           git fetch origin main
-          git rebase origin/main
+          git reset --hard origin/main
 
-      - name: Generate profile assets
+      - name: Generate assets
         run: node scripts/generate.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit and push assets
+      - name: Commit and push
         run: |
           git add assets
+
           if git diff --cached --quiet; then
-            echo "No asset changes to commit."
+            echo "No asset changes."
             exit 0
           fi
 
           git commit -m "update assets"
-          git push origin HEAD:main
+
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "Push failed; syncing and retrying ($attempt/3)"
+            git fetch origin main
+            git reset --hard origin/main
+
+            node scripts/generate.mjs
+            git add assets
+
+            if git diff --cached --quiet; then
+              echo "Assets already up to date."
+              exit 0
+            fi
+
+            git commit -m "update assets"
+          done
+
+          echo "Push failed after 3 attempts."
+          exit 1
