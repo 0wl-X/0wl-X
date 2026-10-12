@@ -2,32 +2,59 @@ name: Update Profile Assets
 
 on:
   schedule:
-    - cron: "7,17,27,37,47,57 * * * *" 
+    - cron: "*/5 * * * *"
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - scripts/**
+      - 'scripts/**'
 
 permissions:
   contents: write
 
+concurrency:
+  group: update-profile-assets
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: node scripts/generate.mjs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
+
+      - name: Configure Git
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Pull latest changes
+        run: |
+          git fetch origin main
+          git rebase origin/main
+
+      - name: Generate profile assets
+        run: node scripts/generate.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push assets
+        run: |
           git add assets
-          git diff --cached --quiet || git commit -m "update assets"
-          git pull --rebase
-          git push
+          if git diff --cached --quiet; then
+            echo "No asset changes to commit."
+            exit 0
+          fi
+
+          git commit -m "update assets"
+          git push origin HEAD:main
